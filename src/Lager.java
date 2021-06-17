@@ -237,7 +237,7 @@ public class Lager {
         return false;
     }
 
-    public <T> Array[] getSorted(T[] lager, Comparator<T> comparator) {
+    public <T> Object[] getSorted(Object[] lager, Comparator<T> comparator) {
 
         Stream<T> stream = (Stream<T>) Arrays.stream(lager);
         stream.sorted(comparator);

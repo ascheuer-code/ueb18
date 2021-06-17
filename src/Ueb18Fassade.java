@@ -1,6 +1,5 @@
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Optional;
 import java.util.Scanner;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -180,7 +179,8 @@ public class Ueb18Fassade extends Lager {
 	 */
 	public Artikel[] aufgabe_h_v(Lager lager) {
 
-		lager.getSorted(lager.filer(this.lager, a -> a instanceof Buch), Comparator.comparing(Buch::getAutor));
+		return (Artikel[]) lager.getSorted((Artikel[]) lager.filer(this.lager, a -> a instanceof Buch).toArray(),
+				Comparator.comparing(Buch::getAutor));
 
 	}
 
