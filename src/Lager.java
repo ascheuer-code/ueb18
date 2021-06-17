@@ -237,7 +237,7 @@ public class Lager {
 
     // applytoarticles
 
-    public void applyToSomeArticles(Artikel[] array, Predicate<? super Artikel> predicate, Consumer<?> consumer) {
+    public void applyToSomeArticles(Predicate<? super Artikel> predicate, Consumer<Artikel> consumer) {
 
         ArrayList<Artikel> liste = new ArrayList<Artikel>();
 

@@ -1,13 +1,9 @@
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Scanner;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * <p>
@@ -55,27 +51,23 @@ public class Ueb18Fassade extends Lager {
 	 */
 	public Artikel[] aufgabe_c_i(Lager lager) {
 
-		ArrayList<Artikel> liste = new ArrayList<Artikel>();
+		Stream<Artikel> stream = Arrays.stream(this.lager);
 
 		System.out.println("1: Unterkategorie\n2: Bestand\n3: Preis");
 		int option = input.nextInt();
 
-		for (Artikel artikel : this.lager) {
-			liste.add(artikel);
-		}
-
 		switch (option) {
 			case 1:
-				liste.sort(unterkategorie);
+				stream.sorted(unterkategorie);
 			case 2:
-				liste.sort(bestand);
+				stream.sorted(bestand);
 			case 3:
-				liste.sort(preis);
+				stream.sorted(preis);
 			default:
 				break;
 		}
 
-		return (Artikel[]) liste.toArray();
+		return (Artikel[]) stream.toArray();
 
 	}
 
@@ -88,13 +80,11 @@ public class Ueb18Fassade extends Lager {
 	 */
 	public void aufgabe_c_ii(Lager lager) {
 
-		ArrayList<Artikel> liste = new ArrayList<Artikel>();
+		Stream<Artikel> stream = Arrays.stream(this.lager);
 
-		for (Artikel artikel : this.lager) {
-			liste.add(artikel);
-		}
+		stream.forEach((item) -> preisZehnProzentHoch.accept(item));
 
-		liste.stream().forEach((item) -> preisZehnProzentHoch.accept(item));
+		this.lager = (Artikel[]) stream.toArray();
 	}
 
 	/**
@@ -106,15 +96,11 @@ public class Ueb18Fassade extends Lager {
 	 */
 	public void aufgabe_c_iii(Lager lager) {
 
-		ArrayList<Artikel> liste = new ArrayList<Artikel>();
+		Stream<Artikel> stream = Arrays.stream(this.lager);
 
-		for (Artikel artikel : this.lager) {
-			liste.add(artikel);
-		}
+		stream.forEach((item) -> addPrefix.accept(item));
 
-		liste.stream().forEach((item) -> addPrefix.accept(item));
-
-		lager.lager = (Artikel[]) liste.toArray();
+		lager.lager = (Artikel[]) stream.toArray();
 	}
 
 	/**
@@ -128,13 +114,11 @@ public class Ueb18Fassade extends Lager {
 	 */
 	public void aufgabe_c_iv(Lager lager) {
 
-		ArrayList<Artikel> liste = new ArrayList<Artikel>();
+		Stream<Artikel> stream = Arrays.stream(this.lager);
 
-		for (Artikel artikel : this.lager) {
-			liste.add(artikel);
-		}
+		stream.forEach((item) -> prefixAndPrice.accept(item, item));
 
-		liste.stream().forEach((item) -> prefixAndPrice.accept(item, item));
+		lager.lager = (Artikel[]) stream.toArray();
 	}
 
 	/**
@@ -157,6 +141,12 @@ public class Ueb18Fassade extends Lager {
 	 *              diesem Objekt vorgenommen.
 	 */
 	public void aufgabe_h_ii(Lager lager) {
+
+		Stream<Artikel> stream = Arrays.stream(this.lager);
+
+		stream.sorted(bestand.reversed()).limit(2).forEach((item) -> addPrefix.accept((Artikel) item));
+
+		lager.lager = (Artikel[]) stream.toArray();
 	}
 
 	/**
@@ -168,6 +158,7 @@ public class Ueb18Fassade extends Lager {
 	 * @param gesuchterAutor Der Autor, dessen Buecher guenstiger werden sollen.
 	 */
 	public void aufgabe_h_iii(Lager lager, String gesuchterAutor) {
+
 	}
 
 	/**

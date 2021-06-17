@@ -195,7 +195,7 @@ public class Artikel {
      * @param bedingung muss true oder false sein
      * @param message   gibt Fehlermeldung aus
      */
-    
+
     public static void check(Boolean bedingung, String message) {
         if (!bedingung)
             throw new IllegalArgumentException(message);
@@ -217,5 +217,10 @@ public class Artikel {
 
     public String getBeschreibung() {
         return art;
+    }
+
+    public void aenderePreis(double preis) {
+        check(preis >= 0, PREISFALSCH);
+        this.preis = preis;
     }
 }
