@@ -1,6 +1,10 @@
-import java.util.ArrayList;
+import java.util.*;
+import java.lang.reflect.Array;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * ueb 08 - Klasse zum anlegen eines Lagers
@@ -233,20 +237,48 @@ public class Lager {
         return false;
     }
 
-    // schrott muss neu gemacht werden!
+    public Array[] getSorted(Artikel[] lager2, Comparator<Artikel> comparator) {
 
-    // applytoarticles
+        Stream<Artikel> stream = Arrays.stream(lager2);
+        stream.sorted(comparator);
+        return (Array[]) stream.toArray();
 
-    public void applyToSomeArticles(Predicate<? super Artikel> predicate, Consumer<Artikel> consumer) {
+    }
 
-        ArrayList<Artikel> liste = new ArrayList<Artikel>();
+    public void applyToArtices(Artikel[] lager, Consumer<Artikel> consumer) {
 
-        for (Artikel artikel : this.lager) {
-            liste.add(artikel);
-        }
+        Stream<Artikel> stream = Arrays.stream(lager);
+        stream.forEach((item) -> consumer.accept(item));
+        this.lager = (Artikel[]) stream.toArray();
 
-        liste.stream().filter(predicate).forEach((item) -> consumer.accept(item));
+    }
 
-        this.lager = (Artikel[]) liste.toArray();
+    public void applyToArticesBiConsumer(Artikel[] lager, BiConsumer<Artikel, Artikel> consumer) {
+
+        Stream<Artikel> stream = Arrays.stream(lager);
+        stream.forEach((item) -> consumer.accept(item, item));
+        this.lager = (Artikel[]) stream.toArray();
+
+    }
+
+    public List<Artikel> filer(Artikel[] lager, Predicate<Artikel> predicate) {
+
+        Stream<Artikel> stream = Arrays.stream(lager);
+        return (List<Artikel>) stream.filter(predicate).collect(Collectors.toList());
+
+    }
+
+    // muss nnoch geändert werden
+    public void applyToSomeArticles(Predicate<Artikel> predicate, Consumer<Artikel> consumer) {
+
+        Stream<Artikel> stream = Arrays.stream(this.lager);
+        stream.filter(predicate).forEach((item) -> consumer.accept(item));
+        this.lager = (Artikel[]) stream.toArray();
+    }
+
+    public List<Artikel> getArticles(Artikel[] lager, Predicate<Artikel> predicate, Comparator<Artikel> comparator) {
+
+        Stream<Artikel> stream = Arrays.stream(lager);
+        return (List<Artikel>) stream.filter(predicate).sorted(comparator).collect(Collectors.toList());
     }
 }
