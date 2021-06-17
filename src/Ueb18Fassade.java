@@ -165,15 +165,11 @@ public class Ueb18Fassade extends Lager {
 	 *              diesem Objekt vorgenommen.
 	 */
 	public void aufgabe_h_iv(Lager lager) {
-		Stream<Artikel> stream = Arrays.stream(this.lager);
 
-		Optional<Artikel> one = stream.filter(a -> a.getBestand() < 3).findAny();
-		Optional<Artikel> two = stream.filter(a -> a.getBestand() > 2).findAny();
-
-		one.stream().forEach((item) -> item.setPreis(item.getPreis() * 0.95));
-		two.stream().forEach((item) -> item.setPreis(item.getPreis() * 1.1));
-
-		this.lager = (Artikel[]) stream.toArray();
+		lager.applyToArtices((Artikel[]) lager.filer(this.lager, a -> a.getBestand() < 3).toArray(),
+				a -> a.setPreis(a.getPreis() * 0.95));
+		lager.applyToArtices((Artikel[]) lager.filer(this.lager, a -> a.getBestand() > 2).toArray(),
+				a -> a.setPreis(a.getPreis() * 1.1));
 	}
 
 	/**
@@ -183,8 +179,10 @@ public class Ueb18Fassade extends Lager {
 	 * @return Eine Liste mit allen Buechern, sortiert nach den Namen der Autoren.
 	 */
 	public Artikel[] aufgabe_h_v(Lager lager) {
-		Stream<?> stream = Arrays.stream(this.lager);
-		stream.filter(a -> a instanceof Buch).sorted(autor);
+
+		return lager.getSorted((Artikel[]) lager.filer(this.lager, a -> a instanceof Buch).toArray(),
+				Comparator.comparing(Buch::getAutor));
+
 	}
 
 	/**
