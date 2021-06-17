@@ -237,9 +237,9 @@ public class Lager {
         return false;
     }
 
-    public <T> Array[] getSorted(T[] lager2, Comparator<T> comparator) {
+    public <T> Array[] getSorted(T[] lager, Comparator<T> comparator) {
 
-        Stream<T> stream = (Stream<T>) Arrays.stream(lager2);
+        Stream<T> stream = (Stream<T>) Arrays.stream(lager);
         stream.sorted(comparator);
         return (Array[]) stream.toArray();
 
@@ -261,10 +261,10 @@ public class Lager {
 
     }
 
-    public <T> List<T> filer(T[] lager, Predicate<T> predicate) {
+    public <T> List<?> filer(T[] lager, Predicate<T> predicate) {
 
         Stream<T> stream = Arrays.stream(lager);
-        return (List<T>) stream.filter(predicate).collect(Collectors.toList());
+        return (List<?>) stream.filter(predicate).collect(Collectors.toList());
 
     }
 
