@@ -120,7 +120,7 @@ public class Ueb18Fassade extends Lager {
 	 *              diesem Objekt vorgenommen.
 	 */
 	public void aufgabe_h_i(Lager lager) {
-		lager.applyToSomeArticles(a -> a instanceof CD, a -> a.aenderePreis(10));
+		lager.applyToSomeArticles(this.lager, a -> a instanceof CD, a -> a.aenderePreis(10));
 	}
 
 	/**
@@ -180,8 +180,7 @@ public class Ueb18Fassade extends Lager {
 	 */
 	public Artikel[] aufgabe_h_v(Lager lager) {
 
-		return lager.getSorted((Artikel[]) lager.filer(this.lager, a -> a instanceof Buch).toArray(),
-				Comparator.comparing(Buch::getAutor));
+		lager.getSorted(lager.filer(this.lager, a -> a instanceof Buch), Comparator.comparing(Buch::getAutor));
 
 	}
 
