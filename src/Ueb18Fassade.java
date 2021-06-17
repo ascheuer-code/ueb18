@@ -58,7 +58,7 @@ public class Ueb18Fassade extends Lager {
 
 		switch (option) {
 			case 1:
-				lager.getSorted(lager.lager, unterkategorie);
+				lager.getSorted(this.lager, unterkategorie);
 			case 2:
 				lager.getSorted(this.lager, bestand);
 			case 3:
@@ -80,7 +80,7 @@ public class Ueb18Fassade extends Lager {
 	 */
 	public void aufgabe_c_ii(Lager lager) {
 
-		lager.applyToArtices(this.lager, a -> a.setPreis(a.getPreis() * 1.1));
+		lager.applyToArtices(this.lager, a -> a.setPreis(a.getPreis() * 0.9));
 	}
 
 	/**
