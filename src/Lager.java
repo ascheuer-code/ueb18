@@ -1,5 +1,4 @@
 import java.util.*;
-import java.lang.reflect.Array;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -238,11 +237,9 @@ public class Lager {
     }
 
     public <T> Object[] getSorted(Object[] lager, Comparator<T> comparator) {
-
         Stream<T> stream = (Stream<T>) Arrays.stream(lager);
         stream.sorted(comparator);
-        return (Array[]) stream.toArray();
-
+        return stream.toArray();
     }
 
     public <T> void applyToArtices(T[] lager, Consumer<T> consumer) {
@@ -275,6 +272,15 @@ public class Lager {
         stream.filter(predicate).forEach((item) -> consumer.accept(item));
 
         this.lager = (Artikel[]) stream.toArray();
+    }
+
+    public <T> List<T> filterAll(T[] lager, List<Object> predicate) {
+
+        Stream<T> stream = Arrays.stream(lager);
+        for (Object predicate2 : predicate) {
+            stream.filter((Predicate) predicate2);
+        }
+        return stream.collect(Collectors.toList());
     }
 
     public <T> List<T> getArticles(T[] lager, Predicate<T> predicate, Comparator<T> comparator) {

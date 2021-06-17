@@ -1,5 +1,6 @@
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Scanner;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -57,7 +58,7 @@ public class Ueb18Fassade extends Lager {
 
 		switch (option) {
 			case 1:
-				lager.getSorted(this.lager, unterkategorie);
+				lager.getSorted(lager.lager, unterkategorie);
 			case 2:
 				lager.getSorted(this.lager, bestand);
 			case 3:
@@ -133,9 +134,7 @@ public class Ueb18Fassade extends Lager {
 	public void aufgabe_h_ii(Lager lager) {
 
 		Stream<Artikel> stream = Arrays.stream(this.lager);
-
 		stream.sorted(bestand.reversed()).limit(2).forEach((item) -> addPrefix.accept((Artikel) item));
-
 		lager.lager = (Artikel[]) stream.toArray();
 	}
 
@@ -179,7 +178,7 @@ public class Ueb18Fassade extends Lager {
 	 */
 	public Artikel[] aufgabe_h_v(Lager lager) {
 
-		return (Artikel[]) lager.getSorted((Artikel[]) lager.filer(this.lager, a -> a instanceof Buch).toArray(),
+		return (Artikel[]) lager.getSorted(lager.filer(this.lager, a -> a instanceof Buch).toArray(),
 				Comparator.comparing(Buch::getAutor));
 
 	}
@@ -197,6 +196,7 @@ public class Ueb18Fassade extends Lager {
 	 *         minPreis und maxPreis liegt.
 	 */
 	public Artikel[] aufgabe_h_vi(Lager lager, String gesuchterAutor, double minPreis, double maxPreis) {
-		return null;
+		List<Object> list = List.of(gesuchterAutor, minPreis, maxPreis);
+		return (Artikel[]) lager.filterAll(this.lager, list).toArray();
 	}
 }
