@@ -262,6 +262,7 @@ public class Lager {
         this.lager = (Artikel[]) stream.toArray();
     }
 
+    // Funktioniert
     public <T> Artikel[] filer(Artikel[] lager, Predicate<Artikel> predicate) {
 
         ArrayList<Artikel> liste = new ArrayList<>();
