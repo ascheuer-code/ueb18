@@ -236,10 +236,14 @@ public class Lager {
         return false;
     }
 
-    public <T> Object[] getSorted(Object[] lager, Comparator<T> comparator) {
-        Stream<T> stream = (Stream<T>) Arrays.stream(lager);
-        stream.sorted(comparator);
-        return stream.toArray();
+    public <T> Artikel[] getSorted(Artikel[] lager, Comparator<Artikel> comparator) {
+        ArrayList<Artikel> liste = new ArrayList<Artikel>();
+
+        for (Artikel artikel : lager) {
+            liste.add(artikel);
+        }
+        return (Artikel[]) liste.stream().sorted(comparator).toArray();
+
     }
 
     public <T> void applyToArtices(T[] lager, Consumer<T> consumer) {
@@ -255,13 +259,17 @@ public class Lager {
         Stream<T> stream = Arrays.stream(lager);
         stream.forEach((item) -> consumer.accept(item, item));
         this.lager = (Artikel[]) stream.toArray();
-
     }
 
-    public <T> List<?> filer(T[] lager, Predicate<T> predicate) {
+    public <T> Artikel[] filer(Artikel[] lager, Predicate<Artikel> predicate) {
 
-        Stream<T> stream = Arrays.stream(lager);
-        return (List<?>) stream.filter(predicate).collect(Collectors.toList());
+        ArrayList<Artikel> liste = new ArrayList<>();
+
+        for (Artikel artikel : lager) {
+            liste.add(artikel);
+        }
+
+        return (Artikel[]) liste.stream().filter(predicate).toArray(Artikel[]::new);
 
     }
 

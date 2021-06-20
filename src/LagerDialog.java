@@ -6,6 +6,7 @@
  * @version 0.1
  */
 
+import java.util.Comparator;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -320,6 +321,12 @@ public class LagerDialog {
         else if (option == ALLE_AUSGABE) {
             System.out.println();
             lager.ausgebenBestandsListe();
+
+            Artikel[] test = (Artikel[]) lager.filer(lager.lager, a -> a instanceof CD);
+
+            for (Object object : test) {
+                System.out.println(object.toString());
+            }
         }
 
         else if (option == TOSTRING) {
