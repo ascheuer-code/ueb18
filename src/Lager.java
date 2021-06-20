@@ -242,7 +242,8 @@ public class Lager {
         for (Artikel artikel : lager) {
             liste.add(artikel);
         }
-        return (Artikel[]) liste.stream().sorted(comparator).toArray();
+
+        return (Artikel[]) liste.stream().sorted(comparator).toArray(Artikel[]::new);
 
     }
 
