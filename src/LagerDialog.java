@@ -10,7 +10,7 @@ import java.util.Comparator;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class LagerDialog {
+public class LagerDialog extends Lager {
     // Klassenkonstante
     private static final int ERSTELLEN = 1;
     private static final int ENTFERNEN = 2;
@@ -319,14 +319,19 @@ public class LagerDialog {
          */
 
         else if (option == ALLE_AUSGABE) {
+
             System.out.println();
             lager.ausgebenBestandsListe();
 
-            Artikel[] test = (Artikel[]) lager.filer(lager.lager, a -> a instanceof CD);
+            // Artikel[] test = (Artikel[]) lager.filer(lager.lager, a -> a instanceof CD);
 
-            for (Object object : test) {
-                System.out.println(object.toString());
-            }
+            // for (Object art : test) {
+            // System.out.println(art.toString());
+            // }
+
+            Ueb18Fassade object = new Ueb18Fassade();
+            object.aufgabe_c_iii(lager);
+
         }
 
         else if (option == TOSTRING) {

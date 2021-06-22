@@ -219,8 +219,11 @@ public class Artikel {
         return art;
     }
 
-    public void aenderePreis(double preis) {
-        check(preis >= 0, PREISFALSCH);
-        this.preis = preis;
+    public void aenderePreis(double prozent) {
+        double change = (prozent * getPreis()) / 100;
+        double price = getPreis() + change;
+        if (price > 0) {
+            setPreis(price);
+        }
     }
 }

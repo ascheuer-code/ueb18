@@ -1,9 +1,8 @@
 import java.util.*;
-import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * ueb 08 - Klasse zum anlegen eines Lagers
@@ -236,66 +235,82 @@ public class Lager {
         return false;
     }
 
-    public <T> Artikel[] getSorted(Artikel[] lager, Comparator<Artikel> comparator) {
-        ArrayList<Artikel> liste = new ArrayList<Artikel>();
-
+    public void applyToArticles(Consumer<Artikel> consumer) {
         for (Artikel artikel : lager) {
-            liste.add(artikel);
+            if (artikel != null) {
+                consumer.accept(artikel);
+            }
         }
-
-        return (Artikel[]) liste.stream().sorted(comparator).toArray(Artikel[]::new);
-
-    }
-
-    public <T> void applyToArtices(T[] lager, Consumer<T> consumer) {
-
-        Stream<T> stream = Arrays.stream(lager);
-        stream.forEach((item) -> consumer.accept(item));
-        this.lager = (Artikel[]) stream.toArray();
-
-    }
-
-    public <T> void applyToArticesBiConsumer(T[] lager, BiConsumer<T, T> consumer) {
-
-        Stream<T> stream = Arrays.stream(lager);
-        stream.forEach((item) -> consumer.accept(item, item));
-        this.lager = (Artikel[]) stream.toArray();
+        /*
+         * ArrayList<Artikel> stream = new ArrayList<>();
+         * 
+         * for (Artikel artikel : this.lager) { stream.add(artikel); }
+         * stream.forEach((item) -> consumer.accept(item)); Artikel[] test =
+         * stream.toArray(Artikel[]::new); this.lager = test;
+         */
     }
 
     // Funktioniert
-    public <T> Artikel[] filer(Artikel[] lager, Predicate<Artikel> predicate) {
-
-        ArrayList<Artikel> liste = new ArrayList<>();
-
+    public List<Artikel> filter(Predicate<Artikel> predicate) {
+        List<Artikel> filteredList = new ArrayList<>();
         for (Artikel artikel : lager) {
-            liste.add(artikel);
+            if (artikel != null && predicate.test(artikel)) {
+                filteredList.add(artikel);
+            }
         }
-
-        return (Artikel[]) liste.stream().filter(predicate).toArray(Artikel[]::new);
+        // return (Artikel[]) liste.stream().filter(predicate).toArray(Artikel[]::new);
+        return filteredList;
 
     }
 
     // muss nnoch geändert werden
-    public <T> void applyToSomeArticles(T[] lager, Predicate<T> predicate, Consumer<T> consumer) {
-
-        Stream<T> stream = Arrays.stream(lager);
-        stream.filter(predicate).forEach((item) -> consumer.accept(item));
-
-        this.lager = (Artikel[]) stream.toArray();
-    }
-
-    public <T> List<T> filterAll(T[] lager, List<Object> predicate) {
-
-        Stream<T> stream = Arrays.stream(lager);
-        for (Object predicate2 : predicate) {
-            stream.filter((Predicate) predicate2);
+    public void applyToSomeArticles(Predicate<Artikel> predicate, Consumer<Artikel> consumer) {
+        for (Artikel artikel : lager) {
+            if (artikel != null && predicate.test(artikel)) {
+                consumer.accept(artikel);
+            }
         }
-        return stream.collect(Collectors.toList());
+        /*
+         * Stream<T> stream = Arrays.stream(lager);
+         * stream.filter(predicate).forEach((item) -> consumer.accept(item));
+         * 
+         * this.lager = (Artikel[]) stream.toArray();
+         */
     }
 
-    public <T> List<T> getArticles(T[] lager, Predicate<T> predicate, Comparator<T> comparator) {
+    public List<Artikel> filterAll(Predicate<Artikel>... predicates) {
+        return Arrays.stream(lager)
+                .filter(artikel -> artikel != null && Arrays.asList(predicates).stream().allMatch(p -> p.test(artikel)))
+                .collect(Collectors.toList());
+    }
 
-        Stream<T> stream = Arrays.stream(lager);
-        return (List<T>) stream.filter(predicate).sorted(comparator).collect(Collectors.toList());
+    public Artikel[] getSorted(final BiPredicate<Artikel, Artikel> predicate) {
+        Artikel[] sortedArray = lager.clone();
+        Arrays.sort(sortedArray, new Comparator<Artikel>() {
+            public int compare(Artikel a1, Artikel a2) {
+                if (a1 == null) {
+                    return 1;
+                }
+                if (predicate.test(a1, a2) == false && predicate.test(a2, a1) == true) {
+                    return -1;
+                }
+                if (predicate.test(a1, a2) == true && predicate.test(a2, a1) == true) {
+                    return 0;
+                }
+                if (predicate.test(a1, a2) == false && predicate.test(a2, a1) == false) {
+                    return 0;
+                }
+                if (predicate.test(a1, a2) == true && predicate.test(a2, a1) == false) {
+                    return 1;
+                }
+                return 0;
+            };
+        });
+        return sortedArray;
+    }
+
+    public List<Artikel> getArticles(Predicate<Artikel> predicate, BiPredicate<Artikel, Artikel> biPredicate) {
+        return Arrays.asList(getSorted(biPredicate)).stream().filter(artikel -> predicate.test(artikel))
+                .collect(Collectors.toList());
     }
 }

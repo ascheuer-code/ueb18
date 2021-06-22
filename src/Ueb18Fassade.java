@@ -1,10 +1,4 @@
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Scanner;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 /**
  * <p>
@@ -25,20 +19,6 @@ import java.util.stream.Stream;
  */
 public class Ueb18Fassade extends Lager {
 
-	Scanner input = new Scanner(System.in);
-
-	Comparator<Artikel> unterkategorie = Comparator.comparing(Artikel::getBeschreibung);
-	Comparator<Artikel> bestand = Comparator.comparing(Artikel::getBestand);
-	Comparator<Artikel> preis = Comparator.comparing(Artikel::getPreis);
-	Comparator<Buch> autor = Comparator.comparing(Buch::getAutor);
-
-	Consumer<Artikel> preisZehnProzentHoch = x -> x.setPreis(x.getPreis() * 1.1);
-	Consumer<Artikel> addPrefix = x -> x.setArt(x.getBeschreibung() + "(Sonderangebot)");
-	BiConsumer<Artikel, Artikel> prefixAndPrice = (x, y) -> {
-		x.setPreis(x.getPreis() * 1.1);
-		y.setArt(y.getBeschreibung() + "(Sonderangebot)");
-	};
-
 	/**
 	 * Loest die Aufgabe (c) i. <br />
 	 * Sortierung nach den folgenden Kriterien:
@@ -53,20 +33,6 @@ public class Ueb18Fassade extends Lager {
 	 */
 	public Artikel[] aufgabe_c_i(Lager lager) {
 
-		System.out.println("1: Unterkategorie\n2: Bestand\n3: Preis");
-		int option = input.nextInt();
-
-		switch (option) {
-			case 1:
-				lager.getSorted(this.lager, unterkategorie);
-			case 2:
-				lager.getSorted(this.lager, bestand);
-			case 3:
-				lager.getSorted(this.lager, preis);
-			default:
-				break;
-
-		}
 		return null;
 
 	}
@@ -80,7 +46,7 @@ public class Ueb18Fassade extends Lager {
 	 */
 	public void aufgabe_c_ii(Lager lager) {
 
-		lager.applyToArtices(this.lager, a -> a.setPreis(a.getPreis() * 0.9));
+		lager.applyToArticles(a -> a.setPreis(a.getPreis() * 0.9));
 	}
 
 	/**
@@ -92,7 +58,7 @@ public class Ueb18Fassade extends Lager {
 	 */
 	public void aufgabe_c_iii(Lager lager) {
 
-		lager.applyToArtices(this.lager, a -> a.setArt(a.getArt() + " (Sonderangebot)"));
+		lager.applyToArticles(a -> a.setArt(a.getArt() + " (Sonderangebot)"));
 	}
 
 	/**
@@ -106,9 +72,9 @@ public class Ueb18Fassade extends Lager {
 	 */
 	public void aufgabe_c_iv(Lager lager) {
 
-		lager.applyToArticesBiConsumer(this.lager, (Artikel a, Artikel b) -> {
+		lager.applyToArticles(a -> {
 			a.setPreis(a.getPreis() * 1.1);
-			b.setArt(b.getArt() + " (Sondernangebot)");
+			a.setArt(a.getArt() + " (Sondernangebot)");
 		});
 	}
 
@@ -120,7 +86,7 @@ public class Ueb18Fassade extends Lager {
 	 *              diesem Objekt vorgenommen.
 	 */
 	public void aufgabe_h_i(Lager lager) {
-		lager.applyToSomeArticles(this.lager, a -> a instanceof CD, a -> a.aenderePreis(10));
+		lager.applyToSomeArticles(a -> a instanceof CD, a -> a.aenderePreis(10));
 	}
 
 	/**
@@ -132,10 +98,13 @@ public class Ueb18Fassade extends Lager {
 	 *              diesem Objekt vorgenommen.
 	 */
 	public void aufgabe_h_ii(Lager lager) {
-
-		Stream<Artikel> stream = Arrays.stream(this.lager);
-		stream.sorted(bestand.reversed()).limit(2).forEach((item) -> addPrefix.accept((Artikel) item));
-		lager.lager = (Artikel[]) stream.toArray();
+		lager.applyToSomeArticles(a -> a.getBestand() <= 2, a -> a.aenderePreis(-5));
+		/*
+		 * Stream<Artikel> stream = Arrays.stream(this.lager);
+		 * stream.sorted(bestand.reversed()).limit(2).forEach((item) ->
+		 * addPrefix.accept((Artikel) item)); lager.lager = (Artikel[])
+		 * stream.toArray();
+		 */
 	}
 
 	/**
@@ -164,10 +133,19 @@ public class Ueb18Fassade extends Lager {
 	 */
 	public void aufgabe_h_iv(Lager lager) {
 
-		lager.applyToArtices((Artikel[]) lager.filer(this.lager, a -> a.getBestand() < 3).toArray(),
-				a -> a.setPreis(a.getPreis() * 0.95));
-		lager.applyToArtices((Artikel[]) lager.filer(this.lager, a -> a.getBestand() > 2).toArray(),
-				a -> a.setPreis(a.getPreis() * 1.1));
+		/*
+		 * lager.applyToArticles((Artikel[]) lager.filer(this.lager, a -> a.getBestand()
+		 * < 3), a -> a.setPreis(a.getPreis() * 0.95));
+		 * lager.applyToArticles((Artikel[]) lager.filer(this.lager, a -> a.getBestand()
+		 * > 2), a -> a.setPreis(a.getPreis() * 1.1));
+		 */
+		lager.applyToArticles(artikel -> {
+			if (artikel instanceof CD) {
+				artikel.aenderePreis(10);
+			} else if (artikel.getBestand() <= 2) {
+				artikel.aenderePreis(-5);
+			}
+		});
 	}
 
 	/**
@@ -177,10 +155,26 @@ public class Ueb18Fassade extends Lager {
 	 * @return Eine Liste mit allen Buechern, sortiert nach den Namen der Autoren.
 	 */
 	public Artikel[] aufgabe_h_v(Lager lager) {
-
-		return (Artikel[]) lager.getSorted(lager.filer(this.lager, a -> a instanceof Buch).toArray(),
-				Comparator.comparing(Buch::getAutor));
-
+		List<Artikel> sorted = lager.getArticles(artikel -> artikel instanceof Buch, (a1, a2) -> {
+			final Buch a = (Buch) a1;
+			final Buch b = (Buch) a2;
+			for (int i = 0; i < a.getAutor().length(); i++) {
+				if (b.getAutor().length() <= i) {
+					return true;
+				}
+				int a_char = a.getAutor().charAt(i);
+				int b_char = b.getAutor().charAt(i);
+				if (b_char > a_char) {
+					return false;
+				} else if (a_char > b_char) {
+					return true;
+				}
+			}
+			return false;
+		});
+		Artikel[] array = new Artikel[sorted.size()];
+		array = sorted.toArray(array);
+		return array;
 	}
 
 	/**
@@ -196,7 +190,10 @@ public class Ueb18Fassade extends Lager {
 	 *         minPreis und maxPreis liegt.
 	 */
 	public Artikel[] aufgabe_h_vi(Lager lager, String gesuchterAutor, double minPreis, double maxPreis) {
-		List<Object> list = List.of(gesuchterAutor, minPreis, maxPreis);
-		return (Artikel[]) lager.filterAll(this.lager, list).toArray();
+		List<Artikel> list = lager.filterAll(artikel -> artikel.getPreis() >= minPreis,
+				artikel -> artikel.getPreis() <= maxPreis);
+		Artikel[] array = new Artikel[list.size()];
+		array = list.toArray(array);
+		return array;
 	}
 }
