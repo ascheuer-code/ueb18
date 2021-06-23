@@ -6,7 +6,6 @@
  * @version 0.1
  */
 
-import java.util.Comparator;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -322,15 +321,6 @@ public class LagerDialog extends Lager {
 
             System.out.println();
             lager.ausgebenBestandsListe();
-
-            // Artikel[] test = (Artikel[]) lager.filer(lager.lager, a -> a instanceof CD);
-
-            // for (Object art : test) {
-            // System.out.println(art.toString());
-            // }
-
-            Ueb18Fassade object = new Ueb18Fassade();
-            object.aufgabe_c_iii(lager);
 
         }
 

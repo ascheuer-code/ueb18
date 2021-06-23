@@ -241,16 +241,8 @@ public class Lager {
                 consumer.accept(artikel);
             }
         }
-        /*
-         * ArrayList<Artikel> stream = new ArrayList<>();
-         * 
-         * for (Artikel artikel : this.lager) { stream.add(artikel); }
-         * stream.forEach((item) -> consumer.accept(item)); Artikel[] test =
-         * stream.toArray(Artikel[]::new); this.lager = test;
-         */
     }
 
-    // Funktioniert
     public List<Artikel> filter(Predicate<Artikel> predicate) {
         List<Artikel> filteredList = new ArrayList<>();
         for (Artikel artikel : lager) {
@@ -258,24 +250,15 @@ public class Lager {
                 filteredList.add(artikel);
             }
         }
-        // return (Artikel[]) liste.stream().filter(predicate).toArray(Artikel[]::new);
         return filteredList;
-
     }
 
-    // muss nnoch geändert werden
     public void applyToSomeArticles(Predicate<Artikel> predicate, Consumer<Artikel> consumer) {
         for (Artikel artikel : lager) {
             if (artikel != null && predicate.test(artikel)) {
                 consumer.accept(artikel);
             }
         }
-        /*
-         * Stream<T> stream = Arrays.stream(lager);
-         * stream.filter(predicate).forEach((item) -> consumer.accept(item));
-         * 
-         * this.lager = (Artikel[]) stream.toArray();
-         */
     }
 
     public List<Artikel> filterAll(Predicate<Artikel>... predicates) {
